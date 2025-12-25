@@ -1,1 +1,695 @@
 # christmas-tree
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>超逼真圣诞树</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #050505 0%, #101020 100%);
+            font-family: 'Arial Rounded MT Bold', 'Microsoft YaHei', sans-serif;
+            overflow: hidden;
+            touch-action: manipulation;
+        }
+        /* 雪花背景 */
+        .snowflake {
+            position: absolute;
+            color: #fff;
+            opacity: 0.7;
+            font-size: 12px;
+            animation: fall linear infinite, sway ease-in-out infinite;
+            z-index: 1;
+            pointer-events: none;
+        }
+        @keyframes fall {
+            0% { transform: translateY(-10px) rotate(0deg); }
+            100% { transform: translateY(100vh) rotate(360deg); }
+        }
+        @keyframes sway {
+            0%, 100% { transform: translateX(0); }
+            50% { transform: translateX(20px); }
+        }
+        /* 圣诞树容器（自然摆动） */
+        .tree-container {
+            position: relative;
+            z-index: 2;
+            animation: treeSway 8s ease-in-out infinite alternate;
+            transform-origin: bottom center;
+        }
+        @keyframes treeSway {
+            0% { transform: rotate(-1deg); }
+            100% { transform: rotate(1deg); }
+        }
+        /* 圣诞树主体 - 重构为多层自然形态 */
+        .tree {
+            position: relative;
+            filter: drop-shadow(0 0 25px rgba(20, 100, 20, 0.7));
+            width: 240px;
+            height: 320px;
+        }
+        /* 顶层枝叶（小而尖） */
+        .tree-tip {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 60px solid #34b834;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-tip::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -35px;
+            width: 0;
+            height: 0;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 55px solid #38c038;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                40deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.08) 1px,
+                rgba(255,255,255,0.08) 3px
+            );
+            clip-path: polygon(
+                0% 100%, 2% 90%, 5% 95%, 8% 88%, 10% 93%,
+                15% 86%, 20% 91%, 25% 84%, 30% 89%, 35% 82%,
+                40% 87%, 45% 80%, 50% 85%, 55% 78%, 60% 83%,
+                65% 76%, 70% 81%, 75% 74%, 80% 79%, 85% 72%,
+                90% 77%, 95% 70%, 98% 75%, 100% 100%
+            );
+        }
+        /* 第一层侧枝（左） */
+        .tree-branch-1-left {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-80%) rotate(-15deg);
+            width: 0;
+            height: 0;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 50px solid #2e992e;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-branch-1-left::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: -30px;
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 45px solid #34b834;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                35deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.07) 1px,
+                rgba(255,255,255,0.07) 3px
+            );
+        }
+        /* 第一层侧枝（右） */
+        .tree-branch-1-right {
+            position: absolute;
+            top: 40px;
+            left: 50%;
+            transform: translateX(-20%) rotate(15deg);
+            width: 0;
+            height: 0;
+            border-left: 35px solid transparent;
+            border-right: 35px solid transparent;
+            border-bottom: 50px solid #2e992e;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-branch-1-right::after {
+            content: '';
+            position: absolute;
+            top: 3px;
+            left: -30px;
+            width: 0;
+            height: 0;
+            border-left: 30px solid transparent;
+            border-right: 30px solid transparent;
+            border-bottom: 45px solid #34b834;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.07) 1px,
+                rgba(255,255,255,0.07) 3px
+            );
+        }
+        /* 第二层主枝 */
+        .tree-main-2 {
+            position: absolute;
+            top: 70px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 60px solid transparent;
+            border-right: 60px solid transparent;
+            border-bottom: 70px solid #298f29;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-main-2::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -55px;
+            width: 0;
+            height: 0;
+            border-left: 55px solid transparent;
+            border-right: 55px solid transparent;
+            border-bottom: 65px solid #2e992e;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                40deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.08) 1px,
+                rgba(255,255,255,0.08) 3px
+            );
+            clip-path: polygon(
+                0% 100%, 2% 90%, 5% 95%, 8% 88%, 10% 93%,
+                15% 86%, 20% 91%, 25% 84%, 30% 89%, 35% 82%,
+                40% 87%, 45% 80%, 50% 85%, 55% 78%, 60% 83%,
+                65% 76%, 70% 81%, 75% 74%, 80% 79%, 85% 72%,
+                90% 77%, 95% 70%, 98% 75%, 100% 100%
+            );
+        }
+        /* 第二层侧枝（左） */
+        .tree-branch-2-left {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-90%) rotate(-20deg);
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-bottom: 60px solid #258525;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-branch-2-left::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: -40px;
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 55px solid #298f29;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                30deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.07) 1px,
+                rgba(255,255,255,0.07) 3px
+            );
+        }
+        /* 第二层侧枝（右） */
+        .tree-branch-2-right {
+            position: absolute;
+            top: 100px;
+            left: 50%;
+            transform: translateX(-10%) rotate(20deg);
+            width: 0;
+            height: 0;
+            border-left: 45px solid transparent;
+            border-right: 45px solid transparent;
+            border-bottom: 60px solid #258525;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-branch-2-right::after {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: -40px;
+            width: 0;
+            height: 0;
+            border-left: 40px solid transparent;
+            border-right: 40px solid transparent;
+            border-bottom: 55px solid #298f29;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                50deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.07) 1px,
+                rgba(255,255,255,0.07) 3px
+            );
+        }
+        /* 第三层主枝 */
+        .tree-main-3 {
+            position: absolute;
+            top: 120px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 80px solid transparent;
+            border-right: 80px solid transparent;
+            border-bottom: 80px solid #218221;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-main-3::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -75px;
+            width: 0;
+            height: 0;
+            border-left: 75px solid transparent;
+            border-right: 75px solid transparent;
+            border-bottom: 75px solid #258525;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                45deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.09) 1px,
+                rgba(255,255,255,0.09) 3px
+            );
+            clip-path: polygon(
+                0% 100%, 2% 90%, 5% 95%, 8% 88%, 10% 93%,
+                15% 86%, 20% 91%, 25% 84%, 30% 89%, 35% 82%,
+                40% 87%, 45% 80%, 50% 85%, 55% 78%, 60% 83%,
+                65% 76%, 70% 81%, 75% 74%, 80% 79%, 85% 72%,
+                90% 77%, 95% 70%, 98% 75%, 100% 100%
+            );
+        }
+        /* 第三层侧枝（左） */
+        .tree-branch-3-left {
+            position: absolute;
+            top: 160px;
+            left: 50%;
+            transform: translateX(-100%) rotate(-25deg);
+            width: 0;
+            height: 0;
+            border-left: 55px solid transparent;
+            border-right: 55px solid transparent;
+            border-bottom: 70px solid #1d781d;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-branch-3-left::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -50px;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 65px solid #218221;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                25deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.08) 1px,
+                rgba(255,255,255,0.08) 3px
+            );
+        }
+        /* 第三层侧枝（右） */
+        .tree-branch-3-right {
+            position: absolute;
+            top: 160px;
+            left: 50%;
+            transform: translateX(0%) rotate(25deg);
+            width: 0;
+            height: 0;
+            border-left: 55px solid transparent;
+            border-right: 55px solid transparent;
+            border-bottom: 70px solid #1d781d;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-branch-3-right::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -50px;
+            width: 0;
+            height: 0;
+            border-left: 50px solid transparent;
+            border-right: 50px solid transparent;
+            border-bottom: 65px solid #218221;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                55deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.08) 1px,
+                rgba(255,255,255,0.08) 3px
+            );
+        }
+        /* 第四层主枝（最底层） */
+        .tree-main-4 {
+            position: absolute;
+            top: 180px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 0;
+            border-left: 90px solid transparent;
+            border-right: 90px solid transparent;
+            border-bottom: 90px solid #1a721a;
+            border-radius: 30% 30% 0 0;
+        }
+        .tree-main-4::after {
+            content: '';
+            position: absolute;
+            top: 5px;
+            left: -85px;
+            width: 0;
+            height: 0;
+            border-left: 85px solid transparent;
+            border-right: 85px solid transparent;
+            border-bottom: 85px solid #1d781d;
+            border-radius: 30% 30% 0 0;
+            background: repeating-linear-gradient(
+                40deg,
+                transparent,
+                transparent 1px,
+                rgba(255,255,255,0.1) 1px,
+                rgba(255,255,255,0.1) 3px
+            );
+            clip-path: polygon(
+                0% 100%, 2% 90%, 5% 95%, 8% 88%, 10% 93%,
+                15% 86%, 20% 91%, 25% 84%, 30% 89%, 35% 82%,
+                40% 87%, 45% 80%, 50% 85%, 55% 78%, 60% 83%,
+                65% 76%, 70% 81%, 75% 74%, 80% 79%, 85% 72%,
+                90% 77%, 95% 70%, 98% 75%, 100% 100%
+            );
+        }
+        /* 树干（逼真树皮纹理） */
+        .tree-trunk {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 38px;
+            height: 75px;
+            background: linear-gradient(90deg, #7d4014 0%, #965a23 50%, #7d4014 100%);
+            border-radius: 8px 8px 12px 12px;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+        }
+        .tree-trunk::before, .tree-trunk::after, .tree-trunk span {
+            content: '';
+            position: absolute;
+            width: 4px;
+            height: 75px;
+            background: rgba(0,0,0,0.25);
+        }
+        .tree-trunk::before { left: 8px; }
+        .tree-trunk::after { right: 8px; }
+        .tree-trunk span { left: 18px; width: 3px; }
+        /* 星星（超立体） */
+        .star {
+            position: absolute;
+            top: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 50px;
+            color: #ffed00;
+            text-shadow: 0 0 15px #ffec8b, 0 0 30px #ffd700, 0 0 45px #ffd700;
+            animation: starSpin 10s linear infinite, starGlow 2s ease-in-out infinite alternate;
+            z-index: 10;
+        }
+        @keyframes starSpin {
+            0% { transform: translateX(-50%) rotate(0deg); }
+            100% { transform: translateX(-50%) rotate(360deg); }
+        }
+        @keyframes starGlow {
+            0% { text-shadow: 0 0 10px #ffec8b, 0 0 20px #ffd700; }
+            100% { text-shadow: 0 0 20px #ffec8b, 0 0 40px #ffd700, 0 0 60px #ffd700; }
+        }
+        /* 装饰球（水晶质感） */
+        .decoration {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            position: absolute;
+            cursor: pointer;
+            box-shadow: inset -6px -6px 12px rgba(0,0,0,0.4), 
+                        inset 6px 6px 12px rgba(255,255,255,0.4),
+                        0 0 10px rgba(255,255,255,0.2);
+            z-index: 5;
+            transition: all 0.4s ease;
+        }
+        .decoration:hover {
+            transform: scale(1.4) rotate(15deg);
+            box-shadow: 0 0 20px currentColor,
+                        inset -6px -6px 12px rgba(0,0,0,0.4), 
+                        inset 6px 6px 12px rgba(255,255,255,0.4);
+        }
+        /* 装饰球颜色 */
+        .red { 
+            background: linear-gradient(135deg, #ff4444 0%, #cc0000 100%);
+            color: #ff4444;
+        }
+        .yellow { 
+            background: linear-gradient(135deg, #ffff44 0%, #e6e600 100%);
+            color: #ffff44;
+        }
+        .blue { 
+            background: linear-gradient(135deg, #44ccff 0%, #0099cc 100%);
+            color: #44ccff;
+        }
+        .purple { 
+            background: linear-gradient(135deg, #cc44ff 0%, #9900cc 100%);
+            color: #cc44ff;
+        }
+        .green { 
+            background: linear-gradient(135deg, #44ff44 0%, #00cc00 100%);
+            color: #44ff44;
+        }
+        .orange { 
+            background: linear-gradient(135deg, #ffaa44 0%, #e67300 100%);
+            color: #ffaa44;
+        }
+        /* 装饰球位置（适配新形态） */
+        .decoration-1 { top: 30px; left: 50%; transform: translateX(-50%); z-index: 6; }
+        .decoration-2 { top: 70px; left: 30%; z-index: 6; }
+        .decoration-3 { top: 70px; right: 30%; z-index: 6; }
+        .decoration-4 { top: 110px; left: 50%; transform: translateX(-50%); z-index: 6; }
+        .decoration-5 { top: 130px; left: 20%; z-index: 6; }
+        .decoration-6 { top: 130px; right: 20%; z-index: 6; }
+        .decoration-7 { top: 170px; left: 50%; transform: translateX(-50%); z-index: 6; }
+        .decoration-8 { top: 190px; left: 15%; z-index: 6; }
+        .decoration-9 { top: 190px; right: 15%; z-index: 6; }
+        .decoration-10 { top: 220px; left: 50%; transform: translateX(-50%); z-index: 6; }
+        /* 祝福文字 */
+        .message {
+            color: #fff;
+            font-size: 32px;
+            margin-top: 40px;
+            text-align: center;
+            text-shadow: 0 0 15px #fff, 0 0 30px #ffd700, 0 0 45px #ffd700;
+            animation: textBlink 2.5s ease-in-out infinite alternate;
+            z-index: 2;
+        }
+        @keyframes textBlink {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0.95; transform: scale(1.08); }
+        }
+        .sub-message {
+            color: #e8e8e8;
+            font-size: 20px;
+            margin-top: 15px;
+            text-shadow: 0 0 8px #ccc;
+        }
+        /* 音乐控制按钮 */
+        .audio-control {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+            backdrop-filter: blur(5px);
+            z-index: 10;
+            border: 2px solid rgba(255,255,255,0.3);
+            transition: all 0.3s ease;
+        }
+        .audio-control:hover {
+            background: rgba(255,255,255,0.2);
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body>
+    <!-- 雪花背景容器 -->
+    <div id="snow-container"></div>
+    
+    <!-- 圣诞树容器（新形态） -->
+    <div class="tree-container">
+        <div class="tree">
+            <!-- 星星 -->
+            <div class="star">★</div>
+            
+            <!-- 顶层尖枝 -->
+            <div class="tree-tip"></div>
+            
+            <!-- 第一层侧枝 -->
+            <div class="tree-branch-1-left"></div>
+            <div class="tree-branch-1-right"></div>
+            
+            <!-- 第二层主枝+侧枝 -->
+            <div class="tree-main-2"></div>
+            <div class="tree-branch-2-left"></div>
+            <div class="tree-branch-2-right"></div>
+            
+            <!-- 第三层主枝+侧枝 -->
+            <div class="tree-main-3"></div>
+            <div class="tree-branch-3-left"></div>
+            <div class="tree-branch-3-right"></div>
+            
+            <!-- 第四层主枝（最底层） -->
+            <div class="tree-main-4"></div>
+            
+            <!-- 树干 -->
+            <div class="tree-trunk"><span></span></div>
+            
+            <!-- 装饰球（数量增加，适配新形态） -->
+            <div class="decoration red decoration-1" onclick="playSound()"></div>
+            <div class="decoration yellow decoration-2" onclick="playSound()"></div>
+            <div class="decoration blue decoration-3" onclick="playSound()"></div>
+            <div class="decoration purple decoration-4" onclick="playSound()"></div>
+            <div class="decoration green decoration-5" onclick="playSound()"></div>
+            <div class="decoration orange decoration-6" onclick="playSound()"></div>
+            <div class="decoration red decoration-7" onclick="playSound()"></div>
+            <div class="decoration yellow decoration-8" onclick="playSound()"></div>
+            <div class="decoration blue decoration-9" onclick="playSound()"></div>
+            <div class="decoration purple decoration-10" onclick="playSound()"></div>
+        </div>
+    </div>
+    
+    <!-- 祝福文字 -->
+    <div class="message">圣诞快乐 🎄</div>
+    <div class="sub-message">愿平安与喜悦伴你左右</div>
+
+    <!-- 音乐控制 -->
+    <div class="audio-control" id="audioBtn" onclick="toggleAudio()">🎵</div>
+    <audio id="christmasMusic" loop preload="auto">
+        <source src="https://actions.google.com/sounds/v1/holiday/jingle_bells_song.ogg" type="audio/ogg">
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mp3">
+    </audio>
+
+    <script>
+        // 音乐控制变量
+        let audio = document.getElementById('christmasMusic');
+        let audioBtn = document.getElementById('audioBtn');
+        let isAudioPlaying = false;
+
+        // 生成更自然的雪花
+        function createSnowflakes() {
+            const container = document.getElementById('snow-container');
+            const count = 80;
+            
+            for (let i = 0; i < count; i++) {
+                const snowflake = document.createElement('div');
+                snowflake.className = 'snowflake';
+                snowflake.textContent = Math.random() > 0.5 ? '❄' : '❅';
+                
+                const size = Math.random() * 10 + 6;
+                snowflake.style.left = `${Math.random() * 100}vw`;
+                snowflake.style.top = `${Math.random() * -150}px`;
+                snowflake.style.animationDuration = `${Math.random() * 15 + 10}s`;
+                snowflake.style.animationDelay = `${Math.random() * 8}s`;
+                snowflake.style.fontSize = `${size}px`;
+                snowflake.style.opacity = Math.random() * 0.8 + 0.2;
+                snowflake.style.animationTimingFunction = `cubic-bezier(${Math.random() * 0.4 + 0.1}, 0, ${Math.random() * 0.4 + 0.1}, 1)`;
+                
+                container.appendChild(snowflake);
+            }
+        }
+
+        // 装饰球音效
+        function playSound() {
+            try {
+                const soundUrls = [
+                    'https://actions.google.com/sounds/v1/holiday/christmas_bell.ogg',
+                    'https://actions.google.com/sounds/v1/holiday/jingle_bells.ogg',
+                    'https://actions.google.com/sounds/v1/holiday/sleigh_bells.ogg'
+                ];
+                const randomUrl = soundUrls[Math.floor(Math.random() * soundUrls.length)];
+                const clickSound = new Audio(randomUrl);
+                clickSound.volume = 0.4;
+                clickSound.play();
+            } catch (error) {
+                console.log("装饰音效播放失败：", error);
+            }
+        }
+
+        // 切换背景音乐
+        function toggleAudio() {
+            if (isAudioPlaying) {
+                audio.pause();
+                audioBtn.textContent = '🎵';
+                isAudioPlaying = false;
+            } else {
+                audio.play().catch(err => {
+                    alert('点击允许音乐播放（浏览器限制需要手动触发）');
+                    audio.play();
+                });
+                audioBtn.textContent = '🔇';
+                isAudioPlaying = true;
+            }
+        }
+
+        // 页面加载后初始化
+        window.onload = function() {
+            createSnowflakes();
+            
+            // 尝试自动播放音乐
+            document.addEventListener('click', function initAudio() {
+                if (!isAudioPlaying) {
+                    audio.volume = 0.5;
+                    audio.play().then(() => {
+                        isAudioPlaying = true;
+                        audioBtn.textContent = '🔇';
+                    }).catch(err => console.log('自动播放失败，需手动点击：', err));
+                }
+                document.removeEventListener('click', initAudio);
+            }, { once: true });
+        };
+
+        // 防止页面缩放导致布局错乱
+        window.addEventListener('resize', function() {
+            document.body.style.height = window.innerHeight + 'px';
+        });
+    </script>
+</body>
+</html>
